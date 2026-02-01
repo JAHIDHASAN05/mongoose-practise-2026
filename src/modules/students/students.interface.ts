@@ -1,0 +1,30 @@
+export type Gurdian = {
+  fatherName: string;
+  motherName: string;
+  fatherOccupation: string;
+  motherOccupation: string;
+  fatherContactNo: string;
+  motherContactNo: string;
+};
+
+export type UserName = {
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+};
+
+export type Student = {
+  id: string;
+  name: UserName;
+  email: string;
+  gender: "male" | "female";
+  dateOfBirth?: string;
+  contactNumber: string;
+  emergencyContactNumber: string;
+  bloodGroup?: "A+" | "B+" | "O+" | "AB+";
+  presentAddress: string;
+  permanentAddress: string;
+  gurdian: Gurdian;
+  profileImage: string;
+  isActive: "active" | "inactive";
+};
