@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { StudentServices } from "./student.service";
 
 const createStudent= async(req:Request,res:Response)=>{
@@ -18,7 +18,18 @@ const createStudent= async(req:Request,res:Response)=>{
    }
 }
 
+const getAllStudent= async(req:Request , res:Response)=>{
+
+    const result = await  StudentServices.getAllStudentFromDB()
+    res.status(200).json({
+        success:true,
+        message: "All student retreive successfully",
+        data: result
+    })
+
+}
 
 export const StudentControllers={
     createStudent,
+    getAllStudent
 }
