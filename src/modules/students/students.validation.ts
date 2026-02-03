@@ -59,6 +59,7 @@ export const studentValidationSchema = z.object({
   isActive: z.enum(["active", "inactive"]).default("inactive"),
 
   profileImage: z.url().optional(),
+  isDelated:z.boolean().default(false),
 
   gurdian: guardianValidationSchema,
 });

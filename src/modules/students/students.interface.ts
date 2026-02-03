@@ -30,6 +30,7 @@ export type Student = {
   gurdian: Gurdian;
   profileImage?: string;
   isActive: "active" | "inactive";
+  isDelated:boolean
 };
 
 

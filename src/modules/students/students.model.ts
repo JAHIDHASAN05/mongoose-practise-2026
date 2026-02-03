@@ -73,6 +73,10 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
     required: true,
   },
   profileImage: { type: String },
+  isDelated: {
+    type: Boolean,
+    default: false,
+  },
   gurdian: {
     type: gurdianSchema,
     required: true,
@@ -80,7 +84,6 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
 });
 
 StudentSchema.pre("save", async function () {
-  console.log(this, "pre before save");
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
@@ -89,9 +92,24 @@ StudentSchema.pre("save", async function () {
 });
 
 StudentSchema.post("save", function (doc, next) {
-  doc.password=''
-  console.log(this, "post after save");
-  next()
+  doc.password = "";
+  next();
+});
+
+
+
+
+StudentSchema.pre("find", async function () {
+  this.find({isDelated: {$ne:true}})
+});
+StudentSchema.pre("findOne", async function () {
+  this.find({isDelated: {$ne:true}})
+});
+
+// console.log
+StudentSchema.pre("aggregate", async function () {
+  this.pipeline().unshift({$match:{isDeleted:{$ne:true}}})
+
 });
 
 StudentSchema.methods.isUserExist = async function (id: string) {

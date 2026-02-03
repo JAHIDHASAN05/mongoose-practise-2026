@@ -1,6 +1,7 @@
 import { Request, response, Response } from "express";
 import { StudentServices } from "./student.service";
 import { studentValidationSchema } from "./students.validation";
+import { success } from "zod";
 
 const createStudent = async (req: Request, res: Response) => {
   try {
@@ -39,6 +40,21 @@ const getAllStudent = async (req: Request, res: Response) => {
   }
 };
 
+const deleteStudent=async( req:Request, res:Response)=>{
+  try {
+    const studentId= req.params.id as string
+    const result= await StudentServices.deleteStudentFromDB(studentId)
+    res.status(200).json({
+      success:true,
+      message:"Student deleted successsfully",
+      data:result
+    })
+    
+  } catch (error) {
+    
+  }
+}
+
 const getSingleStudent = async (req: Request, res: Response) => {
   try {
     const studentId = req.params.id as string;
@@ -61,4 +77,5 @@ export const StudentControllers = {
   createStudent,
   getAllStudent,
   getSingleStudent,
+  deleteStudent,
 };
