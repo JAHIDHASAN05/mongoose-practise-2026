@@ -1,5 +1,13 @@
 import { Schema, model } from "mongoose";
-import { Gurdian, Student, StudentMethods, StudentModel, UserName } from "./students.interface";
+import {
+  Gurdian,
+  Student,
+  StudentMethods,
+  StudentModel,
+  UserName,
+} from "./students.interface";
+import bcrypt from "bcrypt";
+import config from "../../config";
 
 const userNameSchema = new Schema<UserName>({
   first_name: {
@@ -8,7 +16,7 @@ const userNameSchema = new Schema<UserName>({
     trim: true,
     maxLength: [20, "fisrt name maxlenth should not be more than 20"],
     validate: {
-      validator: function (value:string) {
+      validator: function (value: string) {
         const capitalizedValue =
           value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
         return value === capitalizedValue;
@@ -29,11 +37,16 @@ const gurdianSchema = new Schema<Gurdian>({
   motherOccupation: { type: String },
 });
 
-const StudentSchema = new Schema<Student ,StudentModel,StudentMethods>({
+const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
     required: [true, "name is required"],
+  },
+  password: {
+    type: String,
+    required: true,
+    maxLength: [20, "password cannot be contain more than 20 character"],
   },
   email: { type: String, required: [true, "email is required"] },
   contactNumber: { type: String, required: true },
@@ -43,8 +56,8 @@ const StudentSchema = new Schema<Student ,StudentModel,StudentMethods>({
     enum: ["A+", "B+", "AB+", "O+"],
     required: true,
   },
-  presentAddress:{type:String},
-  permanentAddress:{type:String},
+  presentAddress: { type: String },
+  permanentAddress: { type: String },
   gender: {
     type: String,
     enum: {
@@ -66,9 +79,27 @@ const StudentSchema = new Schema<Student ,StudentModel,StudentMethods>({
   },
 });
 
-StudentSchema.methods.isUserExist= async function (id:string) {
-   const exsitingUser= await studentModel.findOne({id});
-   return exsitingUser;
-}
+StudentSchema.pre("save", async function () {
+  console.log(this, "pre before save");
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.BCRYPT_SALT_ROUNDS),
+  );
+});
 
-export const studentModel = model<Student, StudentModel>("students", StudentSchema);
+StudentSchema.post("save", function (doc, next) {
+  doc.password=''
+  console.log(this, "post after save");
+  next()
+});
+
+StudentSchema.methods.isUserExist = async function (id: string) {
+  const exsitingUser = await studentModel.findOne({ id });
+  return exsitingUser;
+};
+
+export const studentModel = model<Student, StudentModel>(
+  "students",
+  StudentSchema,
+);

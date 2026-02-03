@@ -8,13 +8,16 @@ export const userNameValidationSchema = z.object({
     .min(1, "first name is required")
     .trim()
     .max(20, "first name max length should not be more than 20")
-    .refine((value) => {
-      const capitalized =
-        value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      return value === capitalized;
-    }, {
-      message: "first name must be capitalized properly",
-    }),
+    .refine(
+      (value) => {
+        const capitalized =
+          value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+        return value === capitalized;
+      },
+      {
+        message: "first name must be capitalized properly",
+      },
+    ),
 
   middle_name: z.string().min(1, "middle name is required"),
 
@@ -39,6 +42,7 @@ export const studentValidationSchema = z.object({
   id: z.string().min(1),
 
   name: userNameValidationSchema,
+  password: z.string().max(20),
 
   email: z.email(),
 
@@ -58,4 +62,3 @@ export const studentValidationSchema = z.object({
 
   gurdian: guardianValidationSchema,
 });
-
