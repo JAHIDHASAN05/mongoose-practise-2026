@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export type Gurdian = {
   fatherName: string;
   motherName: string;
@@ -28,3 +30,10 @@ export type Student = {
   profileImage?: string;
   isActive: "active" | "inactive";
 };
+
+
+export type StudentMethods ={
+  isUserExist(id:string):Promise<Student |null>
+}
+
+export type StudentModel =Model<Student,Record<string, never>, StudentMethods>

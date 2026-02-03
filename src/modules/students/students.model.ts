@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Gurdian, Student, UserName } from "./students.interface";
+import { Gurdian, Student, StudentMethods, StudentModel, UserName } from "./students.interface";
 
 const userNameSchema = new Schema<UserName>({
   first_name: {
@@ -29,7 +29,7 @@ const gurdianSchema = new Schema<Gurdian>({
   motherOccupation: { type: String },
 });
 
-const StudentSchema = new Schema<Student>({
+const StudentSchema = new Schema<Student ,StudentModel,StudentMethods>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
@@ -66,4 +66,9 @@ const StudentSchema = new Schema<Student>({
   },
 });
 
-export const studentModel = model<Student>("students", StudentSchema);
+StudentSchema.methods.isUserExist= async function (id:string) {
+   const exsitingUser= await studentModel.findOne({id});
+   return exsitingUser;
+}
+
+export const studentModel = model<Student, StudentModel>("students", StudentSchema);

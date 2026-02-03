@@ -1,6 +1,5 @@
 import { Request, response, Response } from "express";
 import { StudentServices } from "./student.service";
-import  {z} from "zod"; 
 import { studentValidationSchema } from "./students.validation";
 
 const createStudent = async (req: Request, res: Response) => {
@@ -18,10 +17,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: "Student is created successfully",
       data: result,
     });
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({
       success: false,
-      massage: "something went wrong1",
+      message: error?.message || "something went wrong1",
       error: error,
     });
   }
