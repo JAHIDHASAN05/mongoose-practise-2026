@@ -43,6 +43,8 @@ const StudentSchema = new Schema<Student>({
     enum: ["A+", "B+", "AB+", "O+"],
     required: true,
   },
+  presentAddress:{type:String},
+  permanentAddress:{type:String},
   gender: {
     type: String,
     enum: {

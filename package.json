@@ -7,8 +7,8 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "start:dev" : "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start:prod" : "node ./dist/server.js",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start:prod": "node ./dist/server.js",
     "build": "tsc"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "mongoose": "^9.1.5"
+    "mongoose": "^9.1.5",
+    "zod": "^4.3.6"
   }
 }

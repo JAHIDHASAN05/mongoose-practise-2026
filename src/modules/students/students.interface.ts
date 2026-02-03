@@ -1,8 +1,8 @@
 export type Gurdian = {
   fatherName: string;
   motherName: string;
-  fatherOccupation: string;
-  motherOccupation: string;
+  fatherOccupation?: string;
+  motherOccupation?: string;
   fatherContactNo: string;
   motherContactNo: string;
 };
@@ -22,9 +22,9 @@ export type Student = {
   contactNumber: string;
   emergencyContactNumber: string;
   bloodGroup?: "A+" | "B+" | "O+" | "AB+";
-  presentAddress: string;
-  permanentAddress: string;
+  presentAddress?: string;
+  permanentAddress?: string;
   gurdian: Gurdian;
-  profileImage: string;
+  profileImage?: string;
   isActive: "active" | "inactive";
 };
