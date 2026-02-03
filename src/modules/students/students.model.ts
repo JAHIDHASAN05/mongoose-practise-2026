@@ -81,6 +81,14 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
     type: gurdianSchema,
     required: true,
   },
+},{
+  toJSON:{
+    virtuals:true
+  }
+});
+
+StudentSchema.virtual("fullName").get(function () {
+  return `${this.name.first_name} ${this.name.middle_name} ${this.name.last_name}`
 });
 
 StudentSchema.pre("save", async function () {
@@ -96,20 +104,16 @@ StudentSchema.post("save", function (doc, next) {
   next();
 });
 
-
-
-
 StudentSchema.pre("find", async function () {
-  this.find({isDelated: {$ne:true}})
+  this.find({ isDelated: { $ne: true } });
 });
 StudentSchema.pre("findOne", async function () {
-  this.find({isDelated: {$ne:true}})
+  this.find({ isDelated: { $ne: true } });
 });
 
 // console.log
 StudentSchema.pre("aggregate", async function () {
-  this.pipeline().unshift({$match:{isDeleted:{$ne:true}}})
-
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
 });
 
 StudentSchema.methods.isUserExist = async function (id: string) {
