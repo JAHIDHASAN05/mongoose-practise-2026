@@ -39,15 +39,17 @@ const gurdianSchema = new Schema<Gurdian>({
 
 const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
   id: { type: String, required: true, unique: true },
+  userId:{type:Schema.Types.ObjectId,required:[true, "userId is requried"],unique:true,ref:'User'},
   name: {
     type: userNameSchema,
     required: [true, "name is required"],
+
   },
-  password: {
-    type: String,
-    required: true,
-    maxLength: [20, "password cannot be contain more than 20 character"],
-  },
+  // password: {
+  //   type: String,
+  //   required: true,
+  //   maxLength: [20, "password cannot be contain more than 20 character"],
+  // },
   email: { type: String, required: [true, "email is required"] },
   contactNumber: { type: String, required: true },
   emergencyContactNumber: { type: String, required: true },
@@ -91,18 +93,18 @@ StudentSchema.virtual("fullName").get(function () {
   return `${this.name.first_name} ${this.name.middle_name} ${this.name.last_name}`
 });
 
-StudentSchema.pre("save", async function () {
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.BCRYPT_SALT_ROUNDS),
-  );
-});
+// StudentSchema.pre("save", async function () {
+//   const user = this;
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.BCRYPT_SALT_ROUNDS),
+//   );
+// });
 
-StudentSchema.post("save", function (doc, next) {
-  doc.password = "";
-  next();
-});
+// StudentSchema.post("save", function (doc, next) {
+//   doc.password = "";
+//   next();
+// });
 
 StudentSchema.pre("find", async function () {
   this.find({ isDelated: { $ne: true } });
