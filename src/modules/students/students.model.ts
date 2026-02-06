@@ -45,11 +45,7 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
     required: [true, "name is required"],
 
   },
-  // password: {
-  //   type: String,
-  //   required: true,
-  //   maxLength: [20, "password cannot be contain more than 20 character"],
-  // },
+
   email: { type: String, required: [true, "email is required"] },
   contactNumber: { type: String, required: true },
   emergencyContactNumber: { type: String, required: true },

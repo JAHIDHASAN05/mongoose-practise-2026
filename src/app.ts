@@ -1,7 +1,9 @@
-import express, { Application, Request, Response } from 'express'
+import express, { Application, NextFunction, Request, Response } from 'express'
 import cors from 'cors'
 import { StudentRoutes } from './modules/students/students.routes'
 import { UserRoutes } from './modules/user/user.routes'
+import globalErrorHandler from './middlewares/globalErrorHandler'
+
 
 const app:Application = express()
 const port = 3000
@@ -17,5 +19,8 @@ app.get('/', (req:Request, res:Response) => {
   res.send('Hello Worldfadfwed! g fgf  jahid')
 })
 
+
+
+app.use(globalErrorHandler)
 
 export default app;
