@@ -39,27 +39,26 @@ export const guardianValidationSchema = z.object({
 /* ---------------- student ---------------- */
 
 export const studentValidationSchema = z.object({
-  id: z.string().min(1),
+  body: z.object({
+    
+    password: z.string().max(20),
 
-  name: userNameValidationSchema,
-  password: z.string().max(20),
+    student: z.object({
+      email: z.email(),
+      name: userNameValidationSchema,
+      contactNumber: z.string().min(1),
+      emergencyContactNumber: z.string().min(1),
 
-  email: z.email(),
+      presentAddress: z.string().min(1).optional(),
+      permanentAddress: z.string().min(1).optional(),
 
-  contactNumber: z.string().min(1),
-  emergencyContactNumber: z.string().min(1),
+      bloodGroup: z.enum(["A+", "B+", "AB+", "O+"]),
 
-  presentAddress: z.string().min(1).optional(),
-  permanentAddress: z.string().min(1).optional(),
+      gender: z.enum(["female", "male"]),
 
-  bloodGroup: z.enum(["A+", "B+", "AB+", "O+"]),
+      profileImage: z.url().optional(),
 
-  gender: z.enum(["female", "male"]),
-
-  isActive: z.enum(["active", "inactive"]).default("inactive"),
-
-  profileImage: z.url().optional(),
-  isDelated:z.boolean().default(false),
-
-  gurdian: guardianValidationSchema,
+      gurdian: guardianValidationSchema,
+    }),
+  }),
 });
