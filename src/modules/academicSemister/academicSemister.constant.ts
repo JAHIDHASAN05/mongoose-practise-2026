@@ -1,6 +1,6 @@
-import { TAcademicSemisterCode, TAcademicSemisterName } from "./academicSemister.interface";
+import { TAcademicSemisterCode, TAcademicSemisterName, TMonth } from "./academicSemister.interface";
 
-export const ALL_MONTHS = [
+export const ALL_MONTHS:TMonth[] = [
   "january",
   "february",
   "march",
