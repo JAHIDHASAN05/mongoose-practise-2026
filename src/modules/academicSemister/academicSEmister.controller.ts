@@ -1,16 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { academicSemisterServices } from "./academicSemister.services";
 import sendResponse from "../../utils/sendResponse";
+import catchAsync from "../../utils/catchAsync";
 
-const createAcademicSemister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const createAcademicSemister = catchAsync(
+  async (req, res) => {
     const data = req.body;
-    console.log({academic:req});
-    const result =         
+    console.log({ academic: req });
+    const result =
       await academicSemisterServices.createAcademicSemisterIntoDB(data);
     sendResponse(res, {
       statusCode: 200,
@@ -18,12 +15,9 @@ const createAcademicSemister = async (
       message: "Academic semister created successfully",
       data: result,
     });
-  } catch (error) {
-    next(error);
-  }
+  },
+);
+
+export const academicSemisterController = {
+  createAcademicSemister,
 };
-
-
-export const academicSemisterController={
-    createAcademicSemister
-}

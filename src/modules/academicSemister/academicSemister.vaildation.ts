@@ -10,3 +10,7 @@ const createAcademicSemisterValidationSchema = z.object({
     endMonth:z.date() 
   }),
 });
+
+export const academicSemisterValidations={
+  createAcademicSemisterValidationSchema
+}
