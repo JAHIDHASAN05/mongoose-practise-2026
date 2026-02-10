@@ -1,32 +1,10 @@
 import { model, Schema } from "mongoose";
 import {
   TAcademicSemister,
-  TAcademicSemisterCode,
-  TAcademicSemisterName,
 } from "./academicSemister.interface";
+import { AcademicSemisterCode, AcademicSemisterName, ALL_MONTHS } from "./academicSemister.constant";
 
-export const ALL_MONTHS = [
-  "january",
-  "february",
-  "march",
-  "april",
-  "may",
-  "june",
-  "july",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december",
-] as const;
 
-export const AcademicSemisterName: TAcademicSemisterName[] = [
-  "autumn",
-  "summer",
-  "winter",
-];
-
-export const AcademicSemisterCode: TAcademicSemisterCode[] = ["01", "02", "03"];
 const AcademicSemisterSchema = new Schema<TAcademicSemister>({
   name: {
     type: String,
