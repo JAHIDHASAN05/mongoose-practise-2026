@@ -15,7 +15,7 @@ const moduleRoutes=[
         route:UserRoutes
     },
     {
-        path:'/academic',
+        path:'/academic-semisters',
         route:academicRoutes
     }
 ]

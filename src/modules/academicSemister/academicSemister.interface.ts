@@ -15,10 +15,14 @@ export type TMonth =
 export type TAcademicSemisterName = "summer" | "autumn" | "winter";
 export type TAcademicSemisterCode = "01" | "02" | "03";
 
+
+export type TAcademicSemisterNameCodeMapper = {
+    [key: string]: string;
+  }; 
 export type TAcademicSemister = {
   name: TAcademicSemisterName;
   code: TAcademicSemisterCode;
-  year: Date;
+  year: string;
   startMonth: TMonth;
   endMonth: TMonth;
 };
