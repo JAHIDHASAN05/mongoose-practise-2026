@@ -39,10 +39,8 @@ export const guardianValidationSchema = z.object({
 /* ---------------- student ---------------- */
 
 export const studentValidationSchema = z.object({
-  body: z.object({
-    
+  body: z.object({    
     password: z.string().max(20),
-
     student: z.object({
       email: z.email(),
       name: userNameValidationSchema,
