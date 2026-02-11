@@ -1,7 +1,8 @@
 import express from "express";
-import { academicFacultyController } from "./academicFaculty.controller";
+
+import { academicDepartmentController } from "../academicDepartment/academicDepartment.controller";
 
 const router= express.Router()
-router.post('/create-academic-faculty', academicFacultyController.createAcademicFaculty)
+router.post('/create-academic-department', academicDepartmentController.createAcademicDepartmeent)
 
 export const academicFacultyRoutes=router;
