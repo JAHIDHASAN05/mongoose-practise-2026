@@ -24,7 +24,7 @@ export const AcademicSemisterName: TAcademicSemisterName[] = [
 export const AcademicSemisterCode: TAcademicSemisterCode[] = ["01", "02", "03"];
 
  export const academicSemisterNameCodeMapper: TAcademicSemisterNameCodeMapper = {
-    automn: "01",
+    autumn: "01",
     summer: "02",
     winter: "03",
   };
