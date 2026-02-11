@@ -13,6 +13,6 @@ router.post(
   academicSemisterController.createAcademicSemister,
 );
 router.get('/get-all-academic-semister', academicSemisterController.getAllAcademicSemister)
-
+router.get('/:id', academicSemisterController.getSingleAcademicSemister)
 
 export const academicRoutes = router;

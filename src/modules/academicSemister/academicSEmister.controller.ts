@@ -26,8 +26,20 @@ const getAllAcademicSemister = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleAcademicSemister=catchAsync(async(req,res)=>{
+  const id= req.params
+  console.log({controller:id});
+  const result = await academicSemisterServices.getSingleAcademicSemisterFromDB(id)
+  sendResponse(res, {
+    statusCode:200,
+    success:true,
+    message:"Single academic semister retrieve successfully",
+    data:result
+  })
+})
 
 export const academicSemisterController = {
   createAcademicSemister,
-  getAllAcademicSemister
+  getAllAcademicSemister,
+  getSingleAcademicSemister
 };
