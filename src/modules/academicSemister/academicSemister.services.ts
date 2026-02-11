@@ -13,6 +13,11 @@ const createAcademicSemisterIntoDB = async (payload: TAcademicSemister) => {
   return result;
 };
 
+const getAllAcademicSemisterFromDB = async()=>{
+      const result= await academicSemisterModel.find()
+      return result
+}
 export const academicSemisterServices = {
   createAcademicSemisterIntoDB,
+  getAllAcademicSemisterFromDB
 };

@@ -19,7 +19,7 @@ export type Student = {
   id: string;
   name: UserName;
   userId:Types.ObjectId,
-
+  admissionSemister:Types.ObjectId,
   email: string;
   gender: "male" | "female";
   dateOfBirth?: string;
