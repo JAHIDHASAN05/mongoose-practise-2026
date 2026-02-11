@@ -2,24 +2,41 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { academicDepartmentServices } from "./academicDepartment.services";
 
-const createAcademicDepartmeent= catchAsync(async(req,res)=>{
-    const result= await academicDepartmentServices.createAcademicDepartmeentIntoDB(req.body)
- sendResponse(res,{
-    statusCode:200,
-    success:true,
-    message:"academic deparment is created successfullly",
-    data:result
- })
-})
-const getAllAcademicDepartment= catchAsync(async(req,res)=>{
-        const result= await academicDepartmentServices.getAllAcademicDepartmentFromDB()
-        sendResponse(res, {
-            statusCode:200,
-            success:true,
-            message:"All academic department retrive succesfuuly",
-            data:result
-        })})
-export const academicDepartmentController={
-    createAcademicDepartmeent,
-    getAllAcademicDepartment
-}
+const createAcademicDepartmeent = catchAsync(async (req, res) => {
+  const result =
+    await academicDepartmentServices.createAcademicDepartmeentIntoDB(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "academic deparment is created successfullly",
+    data: result,
+  });
+});
+const getAllAcademicDepartment = catchAsync(async (req, res) => {
+  const result =
+    await academicDepartmentServices.getAllAcademicDepartmentFromDB();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "All academic department retrive succesfuuly",
+    data: result,
+  });
+});
+
+const getSingleAcademicDepartment = catchAsync(async (req, res) => {
+  const result =
+    await academicDepartmentServices.getSingleAcademicDepartmentFromDB(
+      req.params.id as string
+    );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Department is retrieve successfully",
+    data: result,
+  });
+});
+export const academicDepartmentController = {
+  createAcademicDepartmeent,
+  getAllAcademicDepartment,
+  getSingleAcademicDepartment
+};

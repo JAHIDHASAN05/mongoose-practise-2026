@@ -15,11 +15,17 @@ const createAcademicDepartmeentIntoDB = async (
 };
 
 const getAllAcademicDepartmentFromDB = async () => {
-  console.log("object");
+
   const result = await academicDepartment.find().populate("academicFaculty");
   return result;
 };
+
+const getSingleAcademicDepartmentFromDB=async(id:string)=>{
+    const result = await academicDepartment.findById(id).populate("academicFaculty");
+    return result
+}
 export const academicDepartmentServices = {
   createAcademicDepartmeentIntoDB,
   getAllAcademicDepartmentFromDB,
+  getSingleAcademicDepartmentFromDB
 };
