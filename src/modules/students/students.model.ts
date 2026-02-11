@@ -40,7 +40,8 @@ const gurdianSchema = new Schema<Gurdian>({
 const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
   id: { type: String, required: true, unique: true },
   userId:{type:Schema.Types.ObjectId,required:[true, "userId is requried"],unique:true,ref:'User'},
-  admissionSemister:{type:Schema.Types.ObjectId, ref:"academic semister"},
+  admissionSemister:{type:Schema.Types.ObjectId, ref:"academicSemister"},
+  academicDepartment:{type:Schema.Types.ObjectId, ref:"academicDepartment"},
   name: {
     type: userNameSchema,
     required: [true, "name is required"],

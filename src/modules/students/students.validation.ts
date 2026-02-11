@@ -46,7 +46,8 @@ export const studentValidationSchema = z.object({
       name: userNameValidationSchema,
       contactNumber: z.string().min(1),
       emergencyContactNumber: z.string().min(1),
-      admissionSemister:z.string().optional(),
+      admissionSemister:z.string(),
+      academicDepartment:z.string(),
       presentAddress: z.string().min(1).optional(),
       permanentAddress: z.string().min(1).optional(),
 

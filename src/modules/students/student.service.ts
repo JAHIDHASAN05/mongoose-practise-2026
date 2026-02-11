@@ -3,14 +3,14 @@ import { studentModel } from "./students.model";
 
 const createStudentIntoDB = async (student: Student) => {
   // const result = await studentModel.create(student);
-  const studentData= new studentModel(student)
+  const studentData = new studentModel(student);
 
-  const isExist =await studentData.isUserExist(student.id)
-  console.log({isExist});
-if(isExist){
- throw new Error('User Already exist')
-}
-  const result= await studentData.save()
+  const isExist = await studentData.isUserExist(student.id);
+  console.log({ isExist });
+  if (isExist) {
+    throw new Error("User Already exist");
+  }
+  const result = await studentData.save();
   return result;
 };
 
@@ -23,31 +23,34 @@ const getAllStudentFromDB = async () => {
   }
 };
 
-const getSingleStudentFromDB = async(studentId:string)=>{
-    try {
-        const result= await studentModel.findOne({id:studentId})
-        return result
-    } catch (error) {
-        console.log(error);
-        
-    }
-}
+const getSingleStudentFromDB = async (studentId: string) => {
+  const result = await studentModel
+    .findById(studentId)
+    .populate("admissionSemister").populate({
+      path:"academicDepartment",
+      populate:{
+        path:"academicFaculty"
+      }
+      
+    })
+  if (!result) {
+    throw new Error("This student does not exist");
+  }
+  return result;
+};
 
-const deleteStudentFromDB=async(id:string)=>{
+const deleteStudentFromDB = async (id: string) => {
   try {
-  const result= await studentModel.updateOne({id},{isDelated:true})
-  return result
-    
+    const result = await studentModel.updateOne({ id }, { isDelated: true });
+    return result;
   } catch (error) {
     console.log(error);
-    
   }
-
-}
+};
 
 export const StudentServices = {
   createStudentIntoDB,
   getAllStudentFromDB,
   getSingleStudentFromDB,
-  deleteStudentFromDB
+  deleteStudentFromDB,
 };
