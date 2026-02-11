@@ -10,6 +10,12 @@ const createAcademicDepartmeentIntoDB=async(payload:TAcademicDepartment)=>{
     return result
 }
 
+const getAllAcademicDepartmentFromDB= async()=>{
+console.log("object");
+     const result = await academicDepartment.find()
+     return result
+}
 export const academicDepartmentServices={
-    createAcademicDepartmeentIntoDB
+    createAcademicDepartmeentIntoDB,
+    getAllAcademicDepartmentFromDB
 }

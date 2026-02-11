@@ -11,7 +11,10 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>({
     ref: "academicFaculty",
     required: [true, "Academic faculty Id is required"],
   },
-});
+},{
+    timestamps:true
+}
+);
 
 export const academicDepartment = model(
   "academicDepartment",
