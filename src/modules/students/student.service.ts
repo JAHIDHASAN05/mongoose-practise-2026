@@ -1,3 +1,4 @@
+import AppError from "../../error/AppError";
 import { Student } from "./students.interface";
 import { studentModel } from "./students.model";
 
@@ -23,6 +24,8 @@ const getAllStudentFromDB = async () => {
   }
 };
 
+
+
 const getSingleStudentFromDB = async (studentId: string) => {
   const result = await studentModel
     .findById(studentId)
@@ -34,7 +37,7 @@ const getSingleStudentFromDB = async (studentId: string) => {
       
     })
   if (!result) {
-    throw new Error("This student does not exist");
+    throw new AppError(404, "This student does not exist");
   }
   return result;
 };
