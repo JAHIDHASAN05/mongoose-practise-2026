@@ -6,6 +6,7 @@ import { userModel } from "./user.model";
 import { generateStudentId } from "./user.utils";
 import { academicSemisterModel } from "../academicSemister/academicSemister.model";
 import { Types } from "mongoose";
+import AppError from "../../error/AppError";
 
 const CreateUserIntoDB = async (password: string, student: Student) => {
   let user: Partial<TUser> = {
@@ -17,9 +18,17 @@ const CreateUserIntoDB = async (password: string, student: Student) => {
   const admissionSemister = await academicSemisterModel.findOne({
     _id: new Types.ObjectId(student.admissionSemister),
   });
-  console.log(student);
-  console.log({ admissionSemister });
-  console.log({ admissionSemister: student.admissionSemister });
+  if (!admissionSemister) {
+    throw new AppError(400, "admistion semister is not valid");
+  }
+  const academicDepartment = await academicSemisterModel.findOne({
+    _id: new Types.ObjectId(student.academicDepartment),
+  });
+
+  if (!academicDepartment) {
+    throw new AppError(400, "academic Department  is not valid");
+  }
+
   user.id = await generateStudentId(admissionSemister);
 
   const result = await userModel.create(user);
