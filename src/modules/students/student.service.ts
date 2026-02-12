@@ -1,6 +1,8 @@
+import mongoose from "mongoose";
 import AppError from "../../error/AppError";
 import { Student } from "./students.interface";
 import { studentModel } from "./students.model";
+import { userModel } from "../user/user.model";
 
 const createStudentIntoDB = async (student: Student) => {
   // const result = await studentModel.create(student);
@@ -24,18 +26,16 @@ const getAllStudentFromDB = async () => {
   }
 };
 
-
-
 const getSingleStudentFromDB = async (studentId: string) => {
   const result = await studentModel
     .findById(studentId)
-    .populate("admissionSemister").populate({
-      path:"academicDepartment",
-      populate:{
-        path:"academicFaculty"
-      }
-      
-    })
+    .populate("admissionSemister")
+    .populate({
+      path: "academicDepartment",
+      populate: {
+        path: "academicFaculty",
+      },
+    });
   if (!result) {
     throw new AppError(404, "This student does not exist");
   }
@@ -43,11 +43,42 @@ const getSingleStudentFromDB = async (studentId: string) => {
 };
 
 const deleteStudentFromDB = async (id: string) => {
+  const session = await mongoose.startSession();
   try {
-    const result = await studentModel.updateOne({ id }, { isDelated: true });
+    session.startTransaction();
+    const isUserExist = await userModel.find({ id }).session(session);
+
+    if (!isUserExist.length) {
+      throw new AppError(404, "this user does not exist");
+    }
+    const result = await studentModel.findOneAndUpdate(
+      { id },
+      { isDelated: true },
+      { new: true, session },
+    );
+    console.log({ result });
+    if (!result) {
+      throw new AppError(404, "student deleting false");
+    }
+
+    const userResult = await userModel.findOneAndUpdate(
+      { id },
+      { isDeleted: true },
+      { new: true, session },
+    );
+    console.log({ userResult });
+    if (!userResult?.isDeleted) {
+      throw new AppError(404, "user deleting false");
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return result;
   } catch (error) {
-    console.log(error);
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
   }
 };
 
