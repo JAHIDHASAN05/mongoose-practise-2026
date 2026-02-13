@@ -17,70 +17,29 @@ const createStudentIntoDB = async (student: Student) => {
   return result;
 };
 
-const getAllStudentFromDB = async (queary:Record<string, unknown>) => {
-const quaryObj={...queary}
+const getAllStudentFromDB = async (queary: Record<string, unknown>) => {
+  const quaryObj = { ...queary };
 
-
-  let searchTerm=''
-  if(queary.searchTerm){
-    searchTerm=queary.searchTerm as string
+  let searchTerm = "";
+  if (queary.searchTerm) {
+    searchTerm = queary.searchTerm as string;
   }
-  const quearyField= ['email', "name.first_name", "address"]
-  
+  const quearyField = ["email", "name.first_name", "address"];
 
-const searchQuary= studentModel.find({
-      $or: quearyField.map((quary)=>({
-        [quary]:{$regex:searchTerm, $options:'i'}
-      }))
-    })
+  const searchQuary = studentModel.find({
+    $or: quearyField.map((quary) => ({
+      [quary]: { $regex: searchTerm, $options: "i" },
+    })),
+  });
 
+  //filtering
+  const exclueFields = ["searchTerm", "limit", "sort", "page","fields"];
+  exclueFields.forEach((el) => delete quaryObj[el]);
 
+  console.log({ exclueFields, quaryObj, queary });
 
-    //filtering
-  const exclueFields=["searchTerm","limit",'sort','page']
-  exclueFields.forEach((el)=>delete quaryObj[el])
-
-
-    console.log({exclueFields, quaryObj, queary});
-
-  
-
-    const filterQuary =  searchQuary.find(quaryObj).populate("admissionSemister")
-    .populate({
-      path: "academicDepartment",
-      populate: {
-        path: "academicFaculty",
-      },
-    });;
-
-    let limit =10
-    if(queary.limit){
-      limit=Number(queary.limit)
-    }
-
-    const limitQuary=  filterQuary.limit(limit)
-
-    let sort="-createdAt"
-    if(queary.sort){
-      sort= queary.sort as string
-    }
-
-    const sortQuary=  limitQuary.sort(sort)
-      let page=1
-      let skip=0
-    if(queary.page){
-        page= Number(queary.page)
-        skip= (page-1)*limit
-    }
-
-    const paginationQuary= await sortQuary.skip(skip)
-    return paginationQuary;
-
-};
-
-const getSingleStudentFromDB = async (studentId: string) => {
-  const result = await studentModel
-    .findOne({id:studentId})
+  const filterQuary = searchQuary
+    .find(quaryObj)
     .populate("admissionSemister")
     .populate({
       path: "academicDepartment",
@@ -88,7 +47,50 @@ const getSingleStudentFromDB = async (studentId: string) => {
         path: "academicFaculty",
       },
     });
-    console.log({id:studentId});
+
+  let limit = 10;
+  if (queary.limit) {
+    limit = Number(queary.limit);
+  }
+
+  const limitQuary = filterQuary.limit(limit);
+
+  let sort = "-createdAt";
+  if (queary.sort) {
+    sort = queary.sort as string;
+  }
+
+  const sortQuary = limitQuary.sort(sort);
+  let page = 1;
+  let skip = 0;
+  if (queary.page) {
+    page = Number(queary.page);
+    skip = (page - 1) * limit;
+  }
+
+  const paginationQuary = sortQuary.skip(skip);
+
+  let fields='-_v'
+  if(queary.fields){
+    fields= (queary.fields as string).split(',').join(' ')
+  }
+
+  const fieldsQuary = await paginationQuary.select(fields);
+
+  return fieldsQuary;
+};
+
+const getSingleStudentFromDB = async (studentId: string) => {
+  const result = await studentModel
+    .findOne({ id: studentId })
+    .populate("admissionSemister")
+    .populate({
+      path: "academicDepartment",
+      populate: {
+        path: "academicFaculty",
+      },
+    });
+  console.log({ id: studentId });
   if (!result) {
     throw new AppError(404, "This student does not exist");
   }

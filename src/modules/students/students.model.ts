@@ -89,7 +89,7 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
 });
 
 StudentSchema.virtual("fullName").get(function () {
-  return `${this.name.first_name} ${this.name.middle_name} ${this.name.last_name}`
+  return `${this?.name?.first_name} ${this?.name?.middle_name} ${this?.name?.last_name}`
 });
 
 // StudentSchema.pre("save", async function () {
