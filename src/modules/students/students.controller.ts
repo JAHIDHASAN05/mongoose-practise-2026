@@ -5,6 +5,7 @@ import { success } from "zod";
 import sendResponse from "../../utils/sendResponse";
 import status from "http-status";
 import { error } from "node:console";
+import catchAsync from "../../utils/catchAsync";
 
 const createStudent = async (
   req: Request,
@@ -38,23 +39,16 @@ const createStudent = async (
   }
 };
 
-const getAllStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await StudentServices.getAllStudentFromDB();
-    res.status(200).json({
-      success: true,
-      message: "All student retreive successfully",
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getAllStudent = catchAsync(async (req, res) => {
+  const queary = req.query;
 
+  const result = await StudentServices.getAllStudentFromDB(queary);
+  res.status(200).json({
+    success: true,
+    message: "All student retreive successfully",
+    data: result,
+  });
+});
 const deleteStudent = async (
   req: Request,
   res: Response,

@@ -17,18 +17,25 @@ const createStudentIntoDB = async (student: Student) => {
   return result;
 };
 
-const getAllStudentFromDB = async () => {
-  try {
-    const result = await studentModel.find();
-    return result;
-  } catch (error) {
-    console.log(error);
+const getAllStudentFromDB = async (queary:Record<string, unknown>) => {
+  let searchTerm=''
+  if(queary.searchTerm){
+    searchTerm=queary.searchTerm as string
   }
+  const quearyField= ['email', "name.first_name", "address"]
+  
+    const result = await studentModel.find({
+      $or: quearyField.map((quary)=>({
+        [quary]:{$regex:searchTerm, $options:'i'}
+      }))
+    });
+    return result;
+
 };
 
 const getSingleStudentFromDB = async (studentId: string) => {
   const result = await studentModel
-    .findById(studentId)
+    .findOne({id:studentId})
     .populate("admissionSemister")
     .populate({
       path: "academicDepartment",
@@ -36,6 +43,7 @@ const getSingleStudentFromDB = async (studentId: string) => {
         path: "academicFaculty",
       },
     });
+    console.log({id:studentId});
   if (!result) {
     throw new AppError(404, "This student does not exist");
   }

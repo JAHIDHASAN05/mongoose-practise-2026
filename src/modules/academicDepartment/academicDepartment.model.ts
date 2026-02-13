@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { TAcademicDepartment } from "./academicDepartment.interface";
+import AppError from "../../error/AppError";
 
 const academicDepartmentSchema = new Schema<TAcademicDepartment>({
   name: {
@@ -15,6 +16,15 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>({
     timestamps:true
 }
 );
+
+academicDepartmentSchema.pre('save', async function(){
+
+  const isDepartmentExist= await academicDepartment.find({name:this.name})
+  if(isDepartmentExist){
+    throw new AppError(404, "this department already exist")
+  }
+
+})
 
 export const academicDepartment = model(
   "academicDepartment",
