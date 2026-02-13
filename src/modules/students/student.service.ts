@@ -28,7 +28,13 @@ const getAllStudentFromDB = async (queary:Record<string, unknown>) => {
       $or: quearyField.map((quary)=>({
         [quary]:{$regex:searchTerm, $options:'i'}
       }))
-    });
+    }).populate("admissionSemister")
+    .populate({
+      path: "academicDepartment",
+      populate: {
+        path: "academicFaculty",
+      },
+    });;
     return result;
 
 };
