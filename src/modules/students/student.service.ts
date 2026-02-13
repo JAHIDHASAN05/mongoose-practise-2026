@@ -18,24 +18,55 @@ const createStudentIntoDB = async (student: Student) => {
 };
 
 const getAllStudentFromDB = async (queary:Record<string, unknown>) => {
+const quaryObj={...queary}
+
+
   let searchTerm=''
   if(queary.searchTerm){
     searchTerm=queary.searchTerm as string
   }
   const quearyField= ['email', "name.first_name", "address"]
   
-    const result = await studentModel.find({
+
+const searchQuary= studentModel.find({
       $or: quearyField.map((quary)=>({
         [quary]:{$regex:searchTerm, $options:'i'}
       }))
-    }).populate("admissionSemister")
+    })
+
+
+
+    //filtering
+  const exclueFields=["searchTerm","limit",'sort']
+  exclueFields.forEach((el)=>delete quaryObj[el])
+
+
+    console.log({exclueFields, quaryObj, queary});
+
+  
+
+    const filterQuary =  searchQuary.find(quaryObj).populate("admissionSemister")
     .populate({
       path: "academicDepartment",
       populate: {
         path: "academicFaculty",
       },
     });;
-    return result;
+
+    let limit =10
+    if(queary.limit){
+      limit=Number(queary.limit)
+    }
+
+    const limitQuary=  filterQuary.limit(limit)
+
+    let sort="-createdAt"
+    if(queary.sort){
+      sort= queary.sort as string
+    }
+
+    const sortQuary= await limitQuary.sort(sort)
+    return sortQuary;
 
 };
 
