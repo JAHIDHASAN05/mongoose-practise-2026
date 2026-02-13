@@ -37,7 +37,7 @@ const searchQuary= studentModel.find({
 
 
     //filtering
-  const exclueFields=["searchTerm","limit",'sort']
+  const exclueFields=["searchTerm","limit",'sort','page']
   exclueFields.forEach((el)=>delete quaryObj[el])
 
 
@@ -65,8 +65,16 @@ const searchQuary= studentModel.find({
       sort= queary.sort as string
     }
 
-    const sortQuary= await limitQuary.sort(sort)
-    return sortQuary;
+    const sortQuary=  limitQuary.sort(sort)
+      let page=1
+      let skip=0
+    if(queary.page){
+        page= Number(queary.page)
+        skip= (page-1)*limit
+    }
+
+    const paginationQuary= await sortQuary.skip(skip)
+    return paginationQuary;
 
 };
 

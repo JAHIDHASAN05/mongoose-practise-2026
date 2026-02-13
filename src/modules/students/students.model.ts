@@ -84,7 +84,8 @@ const StudentSchema = new Schema<Student, StudentModel, StudentMethods>({
 },{
   toJSON:{
     virtuals:true
-  }
+  },
+  timestamps:true
 });
 
 StudentSchema.virtual("fullName").get(function () {

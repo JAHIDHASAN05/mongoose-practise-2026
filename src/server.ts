@@ -2,6 +2,7 @@ import app from "./app";
 import config from "./config";
 
 import mongoose from "mongoose";
+import { studentModel } from "./modules/students/students.model";
 
 main().catch((err) => console.log(err));
 
@@ -19,3 +20,7 @@ async function main() {
     console.log(error);
   }
 }
+
+
+
+
