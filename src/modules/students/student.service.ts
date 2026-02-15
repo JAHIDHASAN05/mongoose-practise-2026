@@ -3,6 +3,7 @@ import AppError from "../../error/AppError";
 import { Student } from "./students.interface";
 import { studentModel } from "./students.model";
 import { userModel } from "../user/user.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createStudentIntoDB = async (student: Student) => {
   // const result = await studentModel.create(student);
@@ -18,66 +19,86 @@ const createStudentIntoDB = async (student: Student) => {
 };
 
 const getAllStudentFromDB = async (queary: Record<string, unknown>) => {
-  const quaryObj = { ...queary };
+  // const quaryObj = { ...queary };
 
-  let searchTerm = "";
-  if (queary.searchTerm) {
-    searchTerm = queary.searchTerm as string;
-  }
+  // let searchTerm = "";
+  // if (queary.searchTerm) {
+  //   searchTerm = queary.searchTerm as string;
+  // }
   const quearyField = ["email", "name.first_name", "address"];
 
-  const searchQuary = studentModel.find({
-    $or: quearyField.map((quary) => ({
-      [quary]: { $regex: searchTerm, $options: "i" },
-    })),
-  });
+  // const searchQuary = studentModel.find({
+  //   $or: quearyField.map((quary) => ({
+  //     [quary]: { $regex: searchTerm, $options: "i" },
+  //   })),
+  // });
 
-  //filtering
-  const exclueFields = ["searchTerm", "limit", "sort", "page","fields"];
-  exclueFields.forEach((el) => delete quaryObj[el]);
+  // //filtering
+  // const exclueFields = ["searchTerm", "limit", "sort", "page","fields"];
+  // exclueFields.forEach((el) => delete quaryObj[el]);
 
-  console.log({ exclueFields, quaryObj, queary });
+  // console.log({ exclueFields, quaryObj, queary });
 
-  const filterQuary = searchQuary
-    .find(quaryObj)
-    .populate("admissionSemister")
-    .populate({
-      path: "academicDepartment",
-      populate: {
-        path: "academicFaculty",
-      },
-    });
+  // const filterQuary = searchQuary
+  //   .find(quaryObj)
+  //   .populate("admissionSemister")
+  //   .populate({
+  //     path: "academicDepartment",
+  //     populate: {
+  //       path: "academicFaculty",
+  //     },
+  //   });
 
-  let limit = 10;
-  if (queary.limit) {
-    limit = Number(queary.limit);
-  }
+  // let limit = 10;
+  // if (queary.limit) {
+  //   limit = Number(queary.limit);
+  // }
 
-  const limitQuary = filterQuary.limit(limit);
+  // const limitQuary = filterQuary.limit(limit);
 
-  let sort = "-createdAt";
-  if (queary.sort) {
-    sort = queary.sort as string;
-  }
+  // let sort = "-createdAt";
+  // if (queary.sort) {
+  //   sort = queary.sort as string;
+  // }
 
-  const sortQuary = limitQuary.sort(sort);
-  let page = 1;
-  let skip = 0;
-  if (queary.page) {
-    page = Number(queary.page);
-    skip = (page - 1) * limit;
-  }
+  // const sortQuary = limitQuary.sort(sort);
+  // let page = 1;
+  // let skip = 0;
+  // if (queary.page) {
+  //   page = Number(queary.page);
+  //   skip = (page - 1) * limit;
+  // }
 
-  const paginationQuary = sortQuary.skip(skip);
+  // const paginationQuary = sortQuary.skip(skip);
 
-  let fields='-_v'
-  if(queary.fields){
-    fields= (queary.fields as string).split(',').join(' ')
-  }
+  // let fields='-_v'
+  // if(queary.fields){
+  //   fields= (queary.fields as string).split(',').join(' ')
+  // }
 
-  const fieldsQuary = await paginationQuary.select(fields);
+  // const fieldsQuary = await paginationQuary.select(fields);
 
-  return fieldsQuary;
+  // return fieldsQuary;
+
+  const studentQuery = new QueryBuilder(
+    studentModel
+      .find()
+      .populate("admissionSemister")
+      .populate({
+        path: "academicDepartment",
+        populate: {
+          path: "academicFaculty",
+        },
+      }),
+    queary,
+  )
+    .search(quearyField)
+    .filter()
+    .fields()
+    .sort()
+    .paginate();
+  const result = await studentQuery.modelQuery;
+  return result;
 };
 
 const getSingleStudentFromDB = async (studentId: string) => {
